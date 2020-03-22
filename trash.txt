@@ -1,0 +1,28 @@
+class Bar extends React.Component {
+  constructor(props){
+    super(props);
+    this.divStyle = {
+      height: props.num,
+    }
+  }
+  render() {
+    return(<div id='bar' style={this.divStyle}></div>)
+
+  }
+}
+
+
+
+/*
+var max = 100
+var rows = [];
+for (var i = 0; i < max; i++) {
+
+  rows.push(
+    <Bar
+    num={getRandomInt(5,200)}
+    index={i}
+    />
+  );
+}
+*/
