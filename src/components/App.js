@@ -2,7 +2,6 @@ import React from "react";
 import uuid from "uuid";
 import Bars from "./Bars";
 import SortButton from "./SortButton"
-import HighlightBars from "./HighlightBars"
 
 
 const num_bars = 125;
@@ -15,16 +14,20 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      bar_list: GenerateBars(num_bars,min_bar,max_bar)
+      bar_list: []
     };
-
 }
+
+componentDidMount() {
+  this.randomizebars();
+}
+
   randomizebars = () => {
     this.setState({bar_list: GenerateBars(num_bars,min_bar,max_bar)});
   }
+
   updatebars = (updated_bars) => {
     console.log("update bars");
-    console.log(updated_bars);
     //this.setState({bar_list: updated_bars});
   }
 
@@ -36,14 +39,13 @@ export default class App extends React.Component {
         <div id="UI_container">
           <div id="button_container">
             <SortButton randomizebars={() => this.randomizebars()} />
-            <HighlightBars bar_list={bar_list} updatebars={this.updatebars}/>
           </div>
             <Bars bar_list={bar_list} />
         </div>
       </div>
     );
   }
-}
+}//////<HighlightBars bar_list={bar_list} updatebars={this.updatebars}/>
 
 function GenerateBars(len, min, max) {
   var lst = [];
