@@ -1,33 +1,84 @@
+html, body {
+    height:100%;
+}
 body {
   background-color: #CAD5D8;
 }
 #UI_container{
+  //background-color: green;
   align-items: center;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
+
 }
 #bar_container{
-  position: absolute;
-  bottom: 100px;
+  //background-color: red;
+
+  grid-area:bars;
+  margin-top: 10%;
+  padding: 50px;
+
+
+
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
-  width: 100%;
-  height: 80%;
+
 }
 .bar{
   position: relative;
-  width:7px;
+  width:1%;
   background-color: #007bff;
-  margin-left: 1px;
+  //margin-left: 2px;
 }
 #button_container{
+  //background-color: purple;
   width: 60%;
   padding:30px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+}
+.data_viz{
+  //background-color: yellow;
+
+  grid-area:viz;
+  margin: 7%;
+
+  background-color: #b4bfc2;
+  border-radius: 12px;
+  padding-top: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+
+}
+.bars_and_data{
+  //background-color: black;
+
+  display: grid;
+  grid-template-columns: repeat(10, 10% [col-start]);
+  grid-template-rows: auto;
+  grid-template-areas:
+    "viz viz bars bars bars bars bars bars space space";
+
+  width: 100%;
+
+}
+
+.data_header{
+  font-size: 1.3em;
+  padding-bottom: 10px;
+
+}
+#swaps, #total_ops, #compairsons{
+  font-size: inherit;
+  display: inline;
+  padding: 10px;
 }

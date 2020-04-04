@@ -22,27 +22,22 @@ function selectionsort(bar_list) {
         }
       }
       animations.push([current_index,lowest_index,1])
-      update_bar_list(bar_list,current_index,lowest_index)
+
+      //Swap out data from current index and lowest index
+      var temporary = bar_list[current_index];
+      bar_list[current_index] = bar_list[lowest_index];
+      bar_list[lowest_index] = temporary;
+
+      bar_list[current_index]['id'] = current_index;
+      bar_list[lowest_index]['id'] = lowest_index;
       current_index++;
 
 
   }
-  /*
-  for (i = 0; i < animations.length; i++) {
-    console.log(animations[i]);
-  }
-  */
-  animations[animations.length-1][2] = 2
+  //last item in animation, its third item is 2
+  animations[animations.length-1][2] = 2;
   return [bar_list,animations];
+
 
 }
 export default selectionsort;
-
-function update_bar_list(bar_list,index1,index2){
-  var temporary = bar_list[index1]
-  bar_list[index1] = bar_list[index2]
-  bar_list[index2] = temporary
-
-  bar_list[index1]['id'] = index1
-  bar_list[index2]['id'] = index2
-}
