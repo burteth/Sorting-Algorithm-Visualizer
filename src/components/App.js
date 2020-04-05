@@ -1,36 +1,85 @@
 import React from "react";
-//import uuid from "uuid";
 import Bars from "./Bars";
 
 import selectionsort from "./SelectionSort"
+import bubblesort from "./BubbleSort"
 
-const num_bars = 100;
+var num_bars = 200;
 const min_bar = 10;
-const max_bar = 100;
-const color1 = '#007bff';
-const speed_max = 100;
+const max_bar = 700;
+//const color1 = '#007bff'; (0, 123, 255)
+const speed_max = 50;
+const highlight_color = "red";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      bar_list: []
+      bar_list: GenerateBars(num_bars, min_bar, max_bar)
     };
+
   }
 
   componentDidMount() {
-    this.randomizebars();
+
+    this.stopCurrentSort = this.stopCurrentSort.bind(this);
+    this.updatebars = this.updatebars.bind(this);
+    this.updateBarsFromState = this.updateBarsFromState.bind(this);
+    this.clearCounters = this.clearCounters.bind(this);
+    this.timeouts = [];
+
+  }
+
+  clearCounters = () => {
+    document.getElementById('compairsons').innerText = 0;
+    document.getElementById('swaps').innerText = 0;
+    document.getElementById('total_ops').innerText = 0;
   }
 
   randomizebars = () => {
+    this.stopCurrentSort();
     this.setState({
       bar_list: GenerateBars(num_bars, min_bar, max_bar)
     });
+    this.clearCounters();
+
   }
+
+  //Update the bars based on the current state of bar_list
+  updateBarsFromState = () => {
+
+    var bar_docs = document.getElementsByClassName("bar");
+    var current_bars = []
+    for (var j = 0; j < bar_docs.length; j++) {
+      current_bars.push({
+        color: bar_docs[j].style.backgroundColor,
+        id: j,
+        len: parseInt(bar_docs[j].style.height)
+      })
+    }
+    this.setState({bar_list: current_bars});
+
+  }
+
+  //Interrupts the current sorting process
   stopCurrentSort = () => {
 
+    //Clear all timeouts
+    for (var i = 0; i < this.timeouts.length; i++) {
+      clearTimeout(this.timeouts[i]);
+    }
 
+    //Remove the bars that are currently red
+    var bar_docs = document.getElementsByClassName("bar");
+    for (var i = 0; i < bar_docs.length; i++) {
+      if (bar_docs[i].style.backgroundColor === highlight_color) {
+        bar_docs[i].style.backgroundColor = colorpernum(min_bar, max_bar, parseInt(bar_docs[i].style.height));
+      }
+    }
+
+    //Update the current state with the bars that are visable
+    this.updateBarsFromState();
   }
 
   render() {
@@ -38,15 +87,20 @@ export default class App extends React.Component {
 
     return (<div>
       <div id="UI_container">
-        <div id="button_container">
-          <button className="btn btn-primary" onClick={() => this.randomizebars()}>Randomize</button>
-          <button className="btn btn-primary" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
-          <button className="btn btn-primary">Merge Sort</button>
-          <button className="btn btn-primary">Quick Sort</button>
-          <button className="btn btn-primary">Heap Sort</button>
-          <button className="btn btn-primary">Bubble Sort</button>
+        <div className="header">
+          <div id="banner">
+            <h1>Sorting Algorithm Visualizer</h1>
+          </div>
+          <div id="button_container">
+            <button className="navbar_btn" onClick={() => this.randomizebars()}>Randomize</button>
+            <button className="navbar_btn" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
+            <button className="navbar_btn">Merge Sort</button>
+            <button className="navbar_btn">Quick Sort</button>
+            <button className="navbar_btn">Heap Sort</button>
+            <button className="navbar_btn" onClick={() => this.updatebars(bubblesort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Bubble Sort</button>
+          </div>
         </div>
-        <div className="bars_and_data">
+        <div className="card bars_and_data">
           <div className="data_viz">
             <div>
               <div className="data_header">Number of compairsons:
@@ -65,17 +119,21 @@ export default class App extends React.Component {
             </div>
             <label htmlFor="numberange">Number of Bars</label>
             <input type="range" className="custom-range" id="numberange"></input>
-
             <label htmlFor="speedrange">Sorting Speed</label>
-            <input type="range" className="custom-range" id="speedrange" value='99'></input>
-          <button className="btn btn-primary">Stop</button>
+            <input type="range" className="custom-range" id="speedrange" defaultValue='99'></input>
+            <button className="btn btn-primary" onClick={() => this.stopCurrentSort()}>Stop</button>
           </div>
+
           <Bars bar_list={bar_list}/>
         </div>
       </div>
     </div>);
   }
+
   updatebars = (updated_bars) => {
+    this.clearCounters();
+
+    this.timeouts = [];
 
     var bar_docs = document.getElementsByClassName("bar");
     var counter = 0;
@@ -91,10 +149,10 @@ export default class App extends React.Component {
     var num_swaps = 0;
 
     //linear
-    var speed = Math.abs((((-1*(document.getElementById("speedrange").value))*speed_max/100.0) + speed_max));
+    var speed = Math.abs((((-1 * (document.getElementById("speedrange").value)) * speed_max / 100.0) + speed_max));
     while (counter < animations.length) {
 
-      var timer = setTimeout(() => {
+      this.timeouts.push(setTimeout(() => {
         if (started) {
           bar_docs[animations[k - 1][0]].style.backgroundColor = temporary_color[0];
           bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
@@ -106,8 +164,8 @@ export default class App extends React.Component {
 
           temporary_color[0] = bar_docs[animations[k][0]].style.backgroundColor;
           temporary_color[1] = bar_docs[animations[k][1]].style.backgroundColor;
-          bar_docs[animations[k][0]].style.backgroundColor = 'red';
-          bar_docs[animations[k][1]].style.backgroundColor = 'red';
+          bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
+          bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
 
           num_compairsons += 1;
           document.getElementById('compairsons').innerText = num_compairsons;
@@ -119,8 +177,8 @@ export default class App extends React.Component {
           bar_docs[animations[k][1]].style.height = temp;
           temporary_color[0] = bar_docs[animations[k][1]].style.backgroundColor;
           temporary_color[1] = bar_docs[animations[k][0]].style.backgroundColor;
-          bar_docs[animations[k][0]].style.backgroundColor = 'red';
-          bar_docs[animations[k][1]].style.backgroundColor = 'red';
+          bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
+          bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
 
           num_swaps += 1;
           document.getElementById('swaps').innerText = num_swaps;
@@ -137,7 +195,7 @@ export default class App extends React.Component {
 
         k++;
 
-      }, counter * speed);
+      }, counter * speed));
       counter++;
     };
 
@@ -166,12 +224,17 @@ function getRandomInt(min, max) {
 }
 
 function colorpernum(min, max, number) {
-  var place = Math.floor(255 * (number - min) / (max - min));
-  var color = "rgb(" + 0 + "," + Math.floor(place * 123 / 255) + "," + place + ")";
+  //var place = Math.floor(255 * (number - min) / (max - min));
+  //153,211,223
+  var colors = [153,211,223]
+  for (var i = 0; i < colors.length; i++) {
+    colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
+  }
+
+  var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
   return color;
 }
 
-/*
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -179,4 +242,3 @@ function sleep(milliseconds) {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
-*/
