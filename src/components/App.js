@@ -100,7 +100,7 @@ export default class App extends React.Component {
             <button className="navbar_btn" onClick={() => this.updatebars(bubblesort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Bubble Sort</button>
           </div>
         </div>
-        <div className="card bars_and_data">
+        <div className="bars_and_data">
           <div className="data_viz">
             <div>
               <div className="data_header">Number of compairsons:
@@ -117,11 +117,16 @@ export default class App extends React.Component {
                 <div id="total_ops">0</div>
               </div>
             </div>
+
             <label htmlFor="numberange">Number of Bars</label>
             <input type="range" className="custom-range" id="numberange"></input>
             <label htmlFor="speedrange">Sorting Speed</label>
             <input type="range" className="custom-range" id="speedrange" defaultValue='99'></input>
-            <button className="btn btn-primary" onClick={() => this.stopCurrentSort()}>Stop</button>
+            <div className="control_button_container">
+            <button className="control_button navbar_btn">Start</button>
+            <button className="control_button navbar_btn" onClick={() => this.stopCurrentSort()}>Stop</button>
+            </div>
+
           </div>
 
           <Bars bar_list={bar_list}/>
