@@ -6,7 +6,7 @@ import bubblesort from "./BubbleSort"
 
 var num_bars = 200;
 const min_bar = 10;
-const max_bar = 700;
+const max_bar = 600;
 //const color1 = '#007bff'; (0, 123, 255)
 const speed_max = 50;
 const highlight_color = "red";
@@ -231,12 +231,15 @@ function getRandomInt(min, max) {
 function colorpernum(min, max, number) {
   //var place = Math.floor(255 * (number - min) / (max - min));
   //153,211,223
-  var colors = [153,211,223]
+  var colors = [58,175,169]; //color 3
+  var colors = [43,122,119]; //color 2
+  /*222, 242, 241*/
   for (var i = 0; i < colors.length; i++) {
     colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
   }
 
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+  //return "#88BBD6"
   return color;
 }
 

@@ -11,45 +11,37 @@
   --clean-2: #88BBD6; /*136,187,214*/
   --clean-3: #CDCDCD;
   --clean-4: #E9E9E9;
+
+  /*Color Scheme 1 Clean & Crisp */
+  --modern-1: #17252A; /*23, 37, 42*/
+  --modern-2: #2B7A78; /*43, 122, 119*/
+  --modern-3: #3AAFA9; /*58, 175, 169*/
+  --modern-4: #DEF2F1; /*222, 242, 241*/
+  --modern-5: #FEFFFF; /*254, 255, 255*/
   --bootstrap_color: #fff;
 }
 html, body {
-    //font-family: "Lato";
-    font-family: "Cinzel";
-    //font-weight: 100;
-    //font-family: 'Lato', sans-serif;
-}
-body {
-  background-color: var(--clean-3);
+    font-family: "Arial Black";
+    font-weight: 200;
 }
 #UI_container{
-  //background-color: green;
   align-items: center;
   display: flex;
   flex-direction: column;
-  height:100vh;
+  height:100vh !important;
 
 }
 .header{
   position: relative;
   width: 100%;
-  background-color: rgba(136, 187, 214, 1);
-
-
-  //background-blend-mode: darken;
-  //opacity: .9;
-  //background-image: linear-gradient(to right, rgba(0, 123, 255, .9), rgba(0, 99, 179,0.9));
-  //background-color: rgba(0, 123, 255, .99);
-  //background-repeat: repeat-x;
-  //background-image: url("Images/header_image_cropped_gray.png");
+  background-color: var(--modern-1);
 }
 
 #banner{
-  height: 5.5em;
   //color: var(--clean-4);
-  color: white;
-  padding-left: 6em;
-  padding-top: 2em;
+  color: var(--modern-4);
+
+  padding: 2.5em 0 1em 6em;
 
 }
 #banner h1 {
@@ -67,7 +59,7 @@ body {
   /* || Styles  */
   background-color: inherit;
   //color: var(--clean-4);
-  color: white;
+  color: var(--modern-4);
   border: none;
   padding: .7em;
   font-family: 'Lato', sans-serif;
@@ -88,7 +80,7 @@ body {
 
   /* || Styles  */
   padding: 2.5em;
-  background-color: var(--bootstrap_color);
+  background-color: var(--modern-4);
 
 
 }
@@ -102,14 +94,17 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
-  align-content: space-around;
+  //align-content: space-around;
 
 
   /* || Styles  */
-  margin: 6em;
+  margin: 0% 18% 8% 18%;
+
+
+  //margin: 6em;
   padding: 30px;
-  border-radius: 10px;
-  //background-color: var(--clean-4);
+  //border-radius: 10px;
+  //background-color: var(--modern-1);
 
 
 }
@@ -127,10 +122,12 @@ body {
 
 
   /* || Styles  */
-  color: white;
-  background-color: var(--clean-2);
+  color: var;
+  background-color: var(--modern-2);
   border-radius: 10px ;
-  padding: 3.5em;
+  padding: 3em 3em 3em 3em;
+  margin: 1em 2.5em 16em 2.5em;
+  color: var(--modern-4);
 
 
 }
@@ -143,6 +140,7 @@ body {
 #swaps, #total_ops, #compairsons{
   font-size: inherit;
   display: inline;
+  align-self: flex-end;
   padding: 10px;
 }
 .control_button_container{
