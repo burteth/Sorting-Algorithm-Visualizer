@@ -1,6 +1,7 @@
 import React from "react";
 import Bars from "./Bars";
 
+import mergesort from "./MergeSort"
 import selectionsort from "./SelectionSort"
 import bubblesort from "./BubbleSort"
 
