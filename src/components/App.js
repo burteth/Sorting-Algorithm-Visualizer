@@ -9,7 +9,7 @@ var num_bars = 200;
 const min_bar = 10;
 const max_bar = 600;
 //const color1 = '#007bff'; (0, 123, 255)
-const speed_max = 50;
+const speed_max = 100;
 const highlight_color = "red";
 
 export default class App extends React.Component {
@@ -102,31 +102,44 @@ export default class App extends React.Component {
           </div>
         </div>
         <div className="bars_and_data">
+
           <div className="data_viz">
+
+
             <div>
-              <div className="data_header">Number of compairsons:
-                <div id="compairsons">0</div>
+              <div className="data_header">Number of compairsons
+                <div className="data_caption" id="compairsons">0</div>
               </div>
             </div>
             <div>
-              <div className="data_header">Number of swaps:
-                <div id="swaps">0</div>
+              <div className="data_header">Number of swaps
+                <div className="data_caption" id="swaps">0</div>
               </div>
             </div>
             <div>
-              <div className="data_header">Total Number of operations:
-                <div id="total_ops">0</div>
+              <div className="data_header">Total number of operations
+                <div className="data_caption" id="total_ops">0</div>
               </div>
             </div>
 
-            <label htmlFor="numberange">Number of Bars</label>
-            <input type="range" className="custom-range" id="numberange"></input>
-            <label htmlFor="speedrange">Sorting Speed</label>
-            <input type="range" className="custom-range" id="speedrange" defaultValue='99'></input>
-            <div className="control_button_container">
-            <button className="control_button navbar_btn">Start</button>
-            <button className="control_button navbar_btn" onClick={() => this.stopCurrentSort()}>Stop</button>
+            <div id="range_container">
+
+              <div className="data_header">Number of bars</div>
+              <input type="range" class="slider" id="numberange" min="1" max="100" defaultValue="70"></input>
+
+              <div className="data_header">Sorting Speed</div>
+              <input type="range" class="slider" id="speedrange" min="50" max="100"  defaultValue='75'></input>
+
             </div>
+
+
+            <div className="control_button_container">
+
+            <button className="control_button">Start</button>
+            <button className="control_button" onClick={() => this.stopCurrentSort()}>Stop</button>
+
+            </div>
+
 
           </div>
 
@@ -234,9 +247,10 @@ function colorpernum(min, max, number) {
   //153,211,223
   var colors = [58,175,169]; //color 3
   var colors = [43,122,119]; //color 2
+  var colors = [0,91,246]/*0,91,246*/
   /*222, 242, 241*/
   for (var i = 0; i < colors.length; i++) {
-    colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
+    //colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
   }
 
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";

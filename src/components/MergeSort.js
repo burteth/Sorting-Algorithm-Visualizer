@@ -6,6 +6,7 @@ function mergesort(i) {
     return i
   }
 
+
   var len_i = Math.floor(i.length / 2);
 
   var left = i.slice(0,len_i);
@@ -17,8 +18,6 @@ function mergesort(i) {
 
   return merge(left, right);
 }
-
-
 
 function merge(left, right) {
 
@@ -79,7 +78,7 @@ function test(){
   }
 
 }
-test()
+//test()
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }

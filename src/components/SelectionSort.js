@@ -36,6 +36,7 @@ function selectionsort(bar_list) {
   }
   //last item in animation, its third item is 2
   animations[animations.length-1][2] = 2;
+  console.log(animations);
   return [bar_list,animations];
 
 
