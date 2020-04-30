@@ -49,6 +49,7 @@ html, body {
     //font-weight: 200;
     background-color: var(--fiv-bg);
 }
+button:focus{outline: 0;}
 
 
 #UI_container{
@@ -71,32 +72,33 @@ html, body {
 }
 #banner{
   color: white;
-  //padding: 2.5em 0 1em 6em;
-  padding: 2.5em 2.5em 2.5em 3.5em;
-  width:33%;
+
+  padding: 2em 0em 2em 0em;
+  width: 40%;
+
   text-align: center;
 
 
 }
 #banner h1 {
-  //font-size:3em;
-  font-size:2.5em;
+
+  //font-size:2.7em;
+  font-size: 2.1vw;
 }
 #button_container{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 66%;
+  width: 60%;
 }
 .navbar_btn{
   /* || Styles  */
   background-color: inherit;
-  //color: var(--modern-4);
   color:white;
   border: none;
-  padding: .7em;
-  font-family: 'Lato', sans-serif;
-  font-size: 1.4em;
+  padding: .8em;
+  //font-size: 1.2em;
+  font-size: 1.1vw;
 
 }
 
@@ -107,82 +109,82 @@ html, body {
   width: 100%;
   height: 100%;
 
+  //padding: 3em;
+  //margin: 3.5em 0em 3.5em 6.5em;
+
   /* || Child Positioning */
   display: flex;
   flex-direction: row;
-  /*
-  display: grid;
-  grid-template-columns: repeat(10, 10% [col-start]);
-  grid-template-rows: auto;
-  grid-template-areas:
-    "viz viz viz bars bars bars bars bars bars bars";
-  */
 
   /* || Styles  */
-  padding: 3em;
   background-color: var(--fiv-bg);
-  margin: 3.5em 0em 3.5em 6.5em;
 
+
+}
+#bar_container_outer{
+  /* || Parent Positioning */
+  width: 60%;
+  margin-top: auto;
+  margin-bottom: auto;
 
 }
 #bar_container{
   /* || Parent Positioning */
-  width: 66%;
-  //height: 90%;
 
-  //grid-area:bars;
-
+  //margin: 0em 0em 0em 0em;
+  padding: 2em 7em 2em 7em;
 
   /* || Child Positioning */
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
-  //align-content: space-around;
 
 
   /* || Styles  */
-  //margin: 0% 18% 8% 18%;
-  margin: 0em 0em 0em 0em;
-  padding: 2em 7em 2em 7em;
-  //margin: 6em;
-  //padding: 30px;
-  //border-radius: 10px;
-  //background-color: var(--modern-1);
 
 
 }
 .bar{
   flex-grow: 1;
+  //margin-left: 2px;
 }
 
-.data_viz{
-
+#data_viz_outer{
   /* || Parent Positioning */
-  //grid-area:viz;
-  width: 33%;
+  width: 40%;
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
+#data_viz{
+
+  /* || Parent Positioning*/
+   margin-top: auto;
+   margin-bottom: auto;
+   margin-left: 3em;
+   margin-right: 3em;
+   padding: 2em 3em 2em 3em;
+   height: 65vh;
 
   /* || Child Positioning */
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
 
 
   /* || Styles  */
   background-color: white;
   border-radius: 15px;
-  padding: 3em 3em 3em 3em;
-  //margin: 1em 2.5em 16em 2.5em;
-  margin: 0em 0em 0em 0em;
   color: black;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.07), 0 0px 0 0.5px rgba(10, 10, 10, 0.01);
 
 
 }
 .data_header{
-  font-size: 1.4em;
-  //padding-bottom: 10px;
-  //line-height: 2.8em;
-  padding: .7em 0em .7em 0em;
+  font-size: 1.3em;
+  margin: auto;
+  padding: .3em 0em .3em 0em;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -195,26 +197,30 @@ html, body {
     line-height: inherit;
     font-size: inherit;
 }
+
+
+
 .control_button_container{
-  margin: 1em;
+
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-
+  justify-content: space-around;
 
 }
 .control_button{
-  background-color: var(--bootstrap_color);
-  color: var(--clean-2);
+  background-color: white;
+  color: var(--fiv-bars);
 
-  border-radius: .7em;
-  font-size: 1.8em;
+  border-radius: 5em;
+  font-size: 1.25em;
+  padding: 1em 0em 1em 0em;
   flex-grow: 1;
-  margin: 1em;
+  margin: 1.9em;
+
 }
 .control_button:hover{
-  background-color: var(--clean-2);
-  color: var(--bootstrap_color);
+  background-color: var(--fiv-bars);
+  color: white;
 }
 
 
@@ -258,7 +264,6 @@ html, body {
 .navbar_btn:active{
   color: var(--clean-2);
 }
-.navbar_btn:focus {outline:0;}
 .navbar_btn:hover{
   cursor: pointer;
 }

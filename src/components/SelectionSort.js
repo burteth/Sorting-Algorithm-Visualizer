@@ -14,14 +14,14 @@ function selectionsort(bar_list) {
     var lowest_index = current_index;
 
       for (var i = current_index+1; i < n; i++) {
-        animations.push([current_index,i,0])
+        animations.push([current_index,i,"compare"])
 
         if (bar_list[i]['len'] <= bar_list[lowest_index]['len']){
           lowest_index = i;
 
         }
       }
-      animations.push([current_index,lowest_index,1])
+      animations.push([current_index,lowest_index,"swap"])
 
       //Swap out data from current index and lowest index
       var temporary = bar_list[current_index];
@@ -34,10 +34,7 @@ function selectionsort(bar_list) {
 
 
   }
-  //last item in animation, its third item is 2
-  animations[animations.length-1][2] = 2;
-  console.log(animations);
-  return [bar_list,animations];
+  return animations;
 
 
 }

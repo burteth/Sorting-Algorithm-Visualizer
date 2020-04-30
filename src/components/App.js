@@ -1,13 +1,13 @@
 import React from "react";
 import Bars from "./Bars";
 
-import mergesort from "./MergeSort"
+import run_mergesort from "./MergeSort"
 import selectionsort from "./SelectionSort"
 import bubblesort from "./BubbleSort"
 
 var num_bars = 200;
 const min_bar = 10;
-const max_bar = 600;
+const max_bar = 500;
 //const color1 = '#007bff'; (0, 123, 255)
 const speed_max = 100;
 const highlight_color = "red";
@@ -95,7 +95,7 @@ export default class App extends React.Component {
           <div id="button_container">
             <button className="navbar_btn" onClick={() => this.randomizebars()}>Randomize</button>
             <button className="navbar_btn" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
-            <button className="navbar_btn">Merge Sort</button>
+            <button className="navbar_btn" onClick={() => this.updatebars(run_mergesort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Merge Sort</button>
             <button className="navbar_btn">Quick Sort</button>
             <button className="navbar_btn">Heap Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(bubblesort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Bubble Sort</button>
@@ -103,53 +103,56 @@ export default class App extends React.Component {
         </div>
         <div className="bars_and_data">
 
-          <div className="data_viz">
+          <div id="data_viz_outer">
+            <div id="data_viz">
 
-
-            <div>
-              <div className="data_header">Number of compairsons
-                <div className="data_caption" id="compairsons">0</div>
+              <div id="counter_container">
+              <div>
+                <div className="data_header">Number of compairsons
+                  <div className="data_caption" id="compairsons">0</div>
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="data_header">Number of swaps
-                <div className="data_caption" id="swaps">0</div>
+              <div>
+                <div className="data_header">Number of swaps
+                  <div className="data_caption" id="swaps">0</div>
+                </div>
               </div>
-            </div>
-            <div>
-              <div className="data_header">Total number of operations
-                <div className="data_caption" id="total_ops">0</div>
+              <div>
+                <div className="data_header">Total number of operations
+                  <div className="data_caption" id="total_ops">0</div>
+                </div>
               </div>
+              </div>
+
+              <div id="range_container">
+
+                <div className="data_header">Number of bars</div>
+                <input type="range" className="slider" id="numberange" min="1" max="100" defaultValue="70"></input>
+
+                <div className="data_header">Sorting Speed</div>
+                <input type="range" className="slider" id="speedrange" min="50" max="100" defaultValue='75'></input>
+
+              </div>
+
+              <div className="control_button_container">
+
+                <button className="control_button">Start</button>
+                <button className="control_button" onClick={() => this.stopCurrentSort()}>Stop</button>
+
+              </div>
+
             </div>
-
-            <div id="range_container">
-
-              <div className="data_header">Number of bars</div>
-              <input type="range" class="slider" id="numberange" min="1" max="100" defaultValue="70"></input>
-
-              <div className="data_header">Sorting Speed</div>
-              <input type="range" class="slider" id="speedrange" min="50" max="100"  defaultValue='75'></input>
-
-            </div>
-
-
-            <div className="control_button_container">
-
-            <button className="control_button">Start</button>
-            <button className="control_button" onClick={() => this.stopCurrentSort()}>Stop</button>
-
-            </div>
-
-
           </div>
-
-          <Bars bar_list={bar_list}/>
+          <div id="bar_container_outer">
+            <Bars bar_list={bar_list}/>
+          </div>
         </div>
       </div>
     </div>);
   }
 
-  updatebars = (updated_bars) => {
+  updatebars = (animations) => {
+
     this.clearCounters();
 
     this.timeouts = [];
@@ -157,9 +160,6 @@ export default class App extends React.Component {
     var bar_docs = document.getElementsByClassName("bar");
     var counter = 0;
     var k = 0;
-    var animations = updated_bars[1]
-
-    var started = false;
 
     var temp;
     var temporary_color = [0, 0]
@@ -167,19 +167,22 @@ export default class App extends React.Component {
     var num_compairsons = 0;
     var num_swaps = 0;
 
+      //console.log(debug_height(bar_docs,0,num_bars-1));
+
     //linear
     var speed = Math.abs((((-1 * (document.getElementById("speedrange").value)) * speed_max / 100.0) + speed_max));
     while (counter < animations.length) {
 
+
       this.timeouts.push(setTimeout(() => {
-        if (started) {
+
+        //If the while loop has begun then change the color of the last two bars back into what they were
+        if (k > 0) {
           bar_docs[animations[k - 1][0]].style.backgroundColor = temporary_color[0];
           bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
-        } else {
-          started = true;
         }
 
-        if (animations[k][2] === 0) {
+        if (animations[k][2] === "compare") { //Compare the bars without swapping
 
           temporary_color[0] = bar_docs[animations[k][0]].style.backgroundColor;
           temporary_color[1] = bar_docs[animations[k][1]].style.backgroundColor;
@@ -189,7 +192,7 @@ export default class App extends React.Component {
           num_compairsons += 1;
           document.getElementById('compairsons').innerText = num_compairsons;
 
-        } else if (animations[k][2] === 1) {
+        } else if (animations[k][2] === "swap") { //Swap the bars out
 
           temp = bar_docs[animations[k][0]].style.height;
           bar_docs[animations[k][0]].style.height = bar_docs[animations[k][1]].style.height;
@@ -202,12 +205,45 @@ export default class App extends React.Component {
           num_swaps += 1;
           document.getElementById('swaps').innerText = num_swaps;
 
-        } else {
+        } else if (animations[k][2] === "mergesort swap"){
 
-          temp = bar_docs[animations[k][0]].style.height;
-          bar_docs[animations[k][0]].style.height = bar_docs[animations[k][1]].style.height;
-          bar_docs[animations[k][1]].style.height = temp;
-          this.setState({bar_list: updated_bars[0]});
+          var first_index = animations[k][0];
+          var second_index = animations[k][1];
+
+          //store height and color of bars that are being changed
+          temp = bar_docs[second_index].style.height;
+          temporary_color[0] = bar_docs[animations[k][1]].style.backgroundColor;
+          temporary_color[1] = bar_docs[animations[k][0]].style.backgroundColor;
+
+
+          for (var i = second_index; i > first_index ; i--) {
+              bar_docs[i].style.height = bar_docs[i - 1].style.height;
+              bar_docs[i].style.backgroundColor = bar_docs[i - 1].style.backgroundColor;
+            }
+
+            bar_docs[first_index].style.height = temp
+
+          bar_docs[first_index].style.backgroundColor = highlight_color;
+          bar_docs[second_index].style.backgroundColor = highlight_color;
+
+          num_swaps += 1;
+          document.getElementById('swaps').innerText = num_swaps;
+
+
+        }
+        // console.log(k, animations.length);
+        if (k === animations.length - 1) {
+          bar_docs[animations[k][0]].style.backgroundColor = temporary_color[0];
+          bar_docs[animations[k][1]].style.backgroundColor = temporary_color[1];
+          // temp = bar_docs[animations[k][0]].style.height;
+          // bar_docs[animations[k][0]].style.height = bar_docs[animations[k][1]].style.height;
+          // bar_docs[animations[k][1]].style.height = temp;
+
+          //console.log(set_bar_list(bar_docs));
+          //console.log(updated_bars[0]);
+          this.setState({bar_list: set_bar_list(bar_docs)});
+
+
         }
 
         document.getElementById('total_ops').innerText = num_swaps + num_compairsons;
@@ -219,6 +255,7 @@ export default class App extends React.Component {
     };
 
   }
+
 }
 
 //Helper Functions
@@ -243,18 +280,17 @@ function getRandomInt(min, max) {
 }
 
 function colorpernum(min, max, number) {
-  //var place = Math.floor(255 * (number - min) / (max - min));
-  //153,211,223
-  var colors = [58,175,169]; //color 3
-  var colors = [43,122,119]; //color 2
-  var colors = [0,91,246]/*0,91,246*/
-  /*222, 242, 241*/
+
+  var colors = [0, 91, 246] /* Main Color */
+
+
   for (var i = 0; i < colors.length; i++) {
     //colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
   }
 
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
-  //return "#88BBD6"
+
+
   return color;
 }
 
@@ -264,4 +300,22 @@ function sleep(milliseconds) {
   do {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
+}
+
+
+function debug_height(bars,first_index,second_index){
+  var arr = [];
+  for (var i = first_index; i <= second_index; i++) {
+    arr.push(parseInt((bars[i].style.height).slice(0,-2)))
+  }
+  return arr;
+}
+
+function set_bar_list(div_bars){
+    var state_bars = [];
+
+    for (var i = 0; i < div_bars.length; i++) {
+      state_bars.push({"color":div_bars[i].style.backgroundColor,"id":i,"len":parseInt((div_bars[i].style.height).slice(0,-2))});
+    }
+    return state_bars
 }

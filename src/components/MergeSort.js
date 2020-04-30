@@ -1,84 +1,106 @@
-
-
-function mergesort(i) {
-
-  if (i.length < 2){
-    return i
+function run_mergesort(bar_list) {
+  //Calls the mergesort function and returns a list of animations
+  var animations = [];
+  /* Animations Array Items:
+   *    1. first index to compare
+   *    2. second index to compare
+   *    3. Operation i.e. swap, compare
+   */
+  var arr = [];
+  for (var i = 0; i < bar_list.length; i++) {
+    //creates an array of just the lengths of the bars
+    arr.push(bar_list[i]["len"]);
   }
 
+  var sorted = mergesort(arr, 0, arr.length, animations);
 
-  var len_i = Math.floor(i.length / 2);
+  return animations;
+}
+export default run_mergesort;
 
-  var left = i.slice(0,len_i);
-  var right = i.slice(len_i);
 
 
-  var left = mergesort(left);
-  var right = mergesort(right);
+function mergesort(i, start, end, animations) {
+  if (end - start === 1) {
+    return i;
+  }
 
-  return merge(left, right);
+  var length_of_list = Math.floor((end - start) / 2);
+
+  i = mergesort(
+    i,
+    start,
+    start + length_of_list,
+    animations
+  );
+  i = mergesort(
+    i,
+    start + length_of_list,
+    end,
+    animations
+  );
+
+  i = merge(
+    i,
+    start,
+    start + length_of_list,
+    end,
+    animations
+  );
+
+  return i;
 }
 
-function merge(left, right) {
+function merge(main, start_i, mid_i, end_i, animations) {
 
-  var len_l = left.length - 1;
-  var len_r = right.length - 1;
+  var len_l = mid_i - start_i;
+  var len_r = end_i - mid_i;
 
   var i = 0;
   var j = 0;
   var k = 0;
 
   var result = [];
+  var shift_count = 0;
 
-  while (i <= (len_l) & j <= (len_r)){
+  while ((i < len_l) & (j < len_r)) {
 
-    if (left[i] <= right[j]) {
-      result.push(left[i]);
+
+    if (main[i + start_i] <= main[j + mid_i]) {
+      result.push(main[i + start_i]);
+      animations.push([i + start_i, j + mid_i, "compare"])
       i += 1;
     } else {
-      result.push(right[j]);
+      result.push(main[j + mid_i]);
+      animations.push([i + start_i + shift_count, j + mid_i, "mergesort swap"])
+      shift_count += 1;
       j += 1;
     }
     k += 1;
   }
 
-  while (i <= len_l){
-    result.push(left[i]);
+  while (i < len_l) {
+    result.push(main[i + start_i]);
     i += 1;
   }
-  while (j <= len_r){
-    result.push(right[j]);
+  while (j < len_r) {
+    result.push(main[j + mid_i]);
     j += 1;
   }
-  return result;
+
+  //console.log("Main Before:", main);
+  Array.prototype.splice.apply(main, [start_i, result.length].concat(result));
+
+  /*
+  console.log("Result:", result);
+  console.log("Main:", main);
+  console.log("Animations:", animations);
+  console.log(" ");
+  */
+
+  return main;
 }
 
-
-
-export default mergesort;
-
-function test(){
-
-  var test1 = [];
-  var test2 = [];
-  for (var i = 0; i < 20; i++) {
-    test1 = []
-    test2 = [];
-    for (var j = 0; j < getRandomInt(1,20); j++) {
-      var num = getRandomInt(0,100)
-      test1.push(num);
-      test2.push(num);
-    }
-    test1.sort((a,b) => a-b);
-
-    console.log(mergesort(test2));
-    console.log(test1);
-    console.log("");
-
-  }
-
-}
-//test()
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
