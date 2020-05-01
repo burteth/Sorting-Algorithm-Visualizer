@@ -1,16 +1,18 @@
 import React from "react";
 import Bars from "./Bars";
 
+import run_quicksort from "./QuickSort"
 import run_mergesort from "./MergeSort"
 import selectionsort from "./SelectionSort"
 import bubblesort from "./BubbleSort"
 
-var num_bars = 100;
+var num_bars = 200;
 const min_bar = 10;
 const max_bar = 500;
 //const color1 = '#007bff'; (0, 123, 255)
 const speed_max = 100;
 const highlight_color = "red";
+const gradient = false;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -96,7 +98,7 @@ export default class App extends React.Component {
             <button className="navbar_btn" onClick={() => this.randomizebars()}>Randomize</button>
             <button className="navbar_btn" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(run_mergesort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Merge Sort</button>
-            <button className="navbar_btn">Quick Sort</button>
+            <button className="navbar_btn" onClick={() => this.updatebars(run_quicksort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Quick Sort</button>
             <button className="navbar_btn">Heap Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(bubblesort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Bubble Sort</button>
           </div>
@@ -167,8 +169,6 @@ export default class App extends React.Component {
     var num_compairsons = 0;
     var num_swaps = 0;
 
-      //console.log(debug_height(bar_docs,0,num_bars-1));
-
     //linear
     var speed = Math.abs((((-1 * (document.getElementById("speedrange").value)) * speed_max / 100.0) + speed_max));
 
@@ -184,82 +184,76 @@ export default class App extends React.Component {
     while (counter < animations.length) {
 
 
+
       this.timeouts.push(setTimeout(() => {
+        var first_index = animations[k][0];
+        var second_index = animations[k][1];
 
         //If the while loop has begun then change the color of the last two bars back into what they were
         if (k > 0) {
-          if ((bar_docs[animations[k - 1][3]] !== "mergesort swap")){
-            bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
-          }
+
           bar_docs[animations[k - 1][0]].style.backgroundColor = temporary_color[0];
+          bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
 
         }
 
         if (animations[k][2] === "compare") { //Compare the bars without swapping
 
-          temporary_color[0] = bar_docs[animations[k][0]].style.backgroundColor;
-          temporary_color[1] = bar_docs[animations[k][1]].style.backgroundColor;
-          //bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
-          //bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
+          temporary_color[0] = bar_docs[first_index].style.backgroundColor;
+          temporary_color[1] = bar_docs[second_index].style.backgroundColor;
+          bar_docs[first_index].style.backgroundColor = highlight_color;
+          bar_docs[second_index].style.backgroundColor = highlight_color;
 
           num_compairsons += 1;
           document.getElementById('compairsons').innerText = num_compairsons;
 
         } else if (animations[k][2] === "swap") { //Swap the bars out
 
-          temp = bar_docs[animations[k][0]].style.height;
-          bar_docs[animations[k][0]].style.height = bar_docs[animations[k][1]].style.height;
-          bar_docs[animations[k][1]].style.height = temp;
-          temporary_color[0] = bar_docs[animations[k][1]].style.backgroundColor;
-          temporary_color[1] = bar_docs[animations[k][0]].style.backgroundColor;
-          bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
-          bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
-
-          num_swaps += 1;
-          document.getElementById('swaps').innerText = num_swaps;
-
-        } else if (animations[k][2] === "mergesort swap"){
-
-          var first_index = animations[k][0];
-          var second_index = animations[k][1];
-
-          //store height and color of bars that are being changed
-
-          temporary_color[0] = bar_docs[second_index - 1].style.backgroundColor;
+          temp = bar_docs[first_index].style.height;
+          bar_docs[first_index].style.height = bar_docs[second_index].style.height;
+          bar_docs[second_index].style.height = temp;
+          temporary_color[0] = bar_docs[second_index].style.backgroundColor;
           temporary_color[1] = bar_docs[first_index].style.backgroundColor;
-          temp = bar_docs[second_index].style.height;
-
-            for (var i = second_index; i > first_index; i--) {
-                //console.log(i,"from", i - 1, bar_docs[i].style.backgroundColor, "to", bar_docs[i - 1].style.backgroundColor);
-                bar_docs[i].style.height = bar_docs[i - 1].style.height;
-                bar_docs[i].style.backgroundColor = bar_docs[i - 1].style.backgroundColor;
-              }
-          bar_docs[first_index].style.height = temp;
-          bar_docs[first_index].style.backgroundColor = temporary_color[0];
-
-
           bar_docs[first_index].style.backgroundColor = highlight_color;
           bar_docs[second_index].style.backgroundColor = highlight_color;
 
           num_swaps += 1;
           document.getElementById('swaps').innerText = num_swaps;
 
-          //console.log(set_bar_list(bar_docs).slice(first_index,second_index));
+        } else if (animations[k][2] === "mergesort swap"){
+          //Only used my mergesort because the swapping is different
+
+          //store height and color of bars that are being changed
+          temporary_color[0] = bar_docs[second_index].style.backgroundColor;
+          temporary_color[1] = bar_docs[second_index - 1].style.backgroundColor;
+          temp = bar_docs[second_index].style.height;
+
+          //shift up the bars one place to the right
+            for (var i = second_index; i > first_index; i--) {
+                bar_docs[i].style.height = bar_docs[i - 1].style.height;
+                bar_docs[i].style.backgroundColor = bar_docs[i - 1].style.backgroundColor;
+              }
+          //update the height of the first index with the height of the second index bar
+          bar_docs[first_index].style.height = temp;
+
+          //highlight the bars being compared
+          bar_docs[first_index].style.backgroundColor = highlight_color;
+          bar_docs[second_index].style.backgroundColor = highlight_color;
+
+
+          num_swaps += 1;
+          document.getElementById('swaps').innerText = num_swaps;
+
+
         }
-        // console.log(k, animations.length);
+
         if (k === animations.length - 1) {
-          bar_docs[animations[k][0]].style.backgroundColor = temporary_color[0];
-          bar_docs[animations[k][1]].style.backgroundColor = temporary_color[1];
+          //This occurs if it is the final animation
+          bar_docs[first_index].style.backgroundColor = temporary_color[0];
+          bar_docs[second_index].style.backgroundColor = temporary_color[1];
 
+          //update the bars in the current state
           this.setState({bar_list: set_bar_list(bar_docs)});
-
-          test_init = [];
-          test_1 = set_bar_list(bar_docs);
-          for (var i = 0; i < test_1.length; i++) {
-            test_init.push(test_1[i]["color"])
-          }
-          //console.log(test_init);
-
 
         }
 
@@ -300,11 +294,11 @@ function colorpernum(min, max, number) {
 
   var colors = [0, 91, 246] /* Main Color */
 
-
+if (gradient) {
   for (var i = 0; i < colors.length; i++) {
-    colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
+        colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
   }
-
+}
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
 
 

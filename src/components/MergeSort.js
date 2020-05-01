@@ -12,7 +12,7 @@ function run_mergesort(bar_list) {
     arr.push(bar_list[i]["len"]);
   }
 
-  var sorted = mergesort(arr, 0, arr.length, animations);
+  mergesort(arr, 0, arr.length, animations);
 
   return animations;
 }
@@ -39,7 +39,6 @@ function merge(main, start_i, mid_i, end_i, animations) {
 
   var i = 0;
   var j = 0;
-  var k = 0;
 
   var result = [];
   var shift_count = 0;
@@ -60,7 +59,6 @@ function merge(main, start_i, mid_i, end_i, animations) {
       j += 1;
 
     }
-    k += 1;
   }
 
   while (i < len_l) {
@@ -76,8 +74,4 @@ function merge(main, start_i, mid_i, end_i, animations) {
   Array.prototype.splice.apply(main, [start_i, result.length].concat(result));
 
   return main;
-}
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
 }
