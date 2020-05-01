@@ -18,8 +18,6 @@ function run_mergesort(bar_list) {
 }
 export default run_mergesort;
 
-
-
 function mergesort(i, start, end, animations) {
   if (end - start === 1) {
     return i;
@@ -27,32 +25,15 @@ function mergesort(i, start, end, animations) {
 
   var length_of_list = Math.floor((end - start) / 2);
 
-  i = mergesort(
-    i,
-    start,
-    start + length_of_list,
-    animations
-  );
-  i = mergesort(
-    i,
-    start + length_of_list,
-    end,
-    animations
-  );
+  i = mergesort(i, start, start + length_of_list, animations);
+  i = mergesort(i, start + length_of_list, end, animations);
 
-  i = merge(
-    i,
-    start,
-    start + length_of_list,
-    end,
-    animations
-  );
+  i = merge(i, start, start + length_of_list, end, animations);
 
   return i;
 }
 
 function merge(main, start_i, mid_i, end_i, animations) {
-
   var len_l = mid_i - start_i;
   var len_r = end_i - mid_i;
 
@@ -65,16 +46,19 @@ function merge(main, start_i, mid_i, end_i, animations) {
 
   while ((i < len_l) & (j < len_r)) {
 
-
     if (main[i + start_i] <= main[j + mid_i]) {
+
       result.push(main[i + start_i]);
-      animations.push([i + start_i, j + mid_i, "compare"])
+      animations.push([i + start_i, j + mid_i, "compare"]);
       i += 1;
+
     } else {
+
       result.push(main[j + mid_i]);
-      animations.push([i + start_i + shift_count, j + mid_i, "mergesort swap"])
+      animations.push([i + start_i + shift_count, j + mid_i, "mergesort swap"]);
       shift_count += 1;
       j += 1;
+
     }
     k += 1;
   }
@@ -88,15 +72,8 @@ function merge(main, start_i, mid_i, end_i, animations) {
     j += 1;
   }
 
-  //console.log("Main Before:", main);
-  Array.prototype.splice.apply(main, [start_i, result.length].concat(result));
 
-  /*
-  console.log("Result:", result);
-  console.log("Main:", main);
-  console.log("Animations:", animations);
-  console.log(" ");
-  */
+  Array.prototype.splice.apply(main, [start_i, result.length].concat(result));
 
   return main;
 }

@@ -5,7 +5,7 @@ import run_mergesort from "./MergeSort"
 import selectionsort from "./SelectionSort"
 import bubblesort from "./BubbleSort"
 
-var num_bars = 200;
+var num_bars = 100;
 const min_bar = 10;
 const max_bar = 500;
 //const color1 = '#007bff'; (0, 123, 255)
@@ -171,6 +171,16 @@ export default class App extends React.Component {
 
     //linear
     var speed = Math.abs((((-1 * (document.getElementById("speedrange").value)) * speed_max / 100.0) + speed_max));
+
+    //testing
+    var test_init = [];
+    var test_1 = set_bar_list(bar_docs);
+    for (var i = 0; i < test_1.length; i++) {
+      test_init.push(test_1[i]["color"])
+    }
+    //console.log(test_init);
+
+
     while (counter < animations.length) {
 
 
@@ -178,16 +188,19 @@ export default class App extends React.Component {
 
         //If the while loop has begun then change the color of the last two bars back into what they were
         if (k > 0) {
+          if ((bar_docs[animations[k - 1][3]] !== "mergesort swap")){
+            bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
+          }
           bar_docs[animations[k - 1][0]].style.backgroundColor = temporary_color[0];
-          bar_docs[animations[k - 1][1]].style.backgroundColor = temporary_color[1];
+
         }
 
         if (animations[k][2] === "compare") { //Compare the bars without swapping
 
           temporary_color[0] = bar_docs[animations[k][0]].style.backgroundColor;
           temporary_color[1] = bar_docs[animations[k][1]].style.backgroundColor;
-          bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
-          bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
+          //bar_docs[animations[k][0]].style.backgroundColor = highlight_color;
+          //bar_docs[animations[k][1]].style.backgroundColor = highlight_color;
 
           num_compairsons += 1;
           document.getElementById('compairsons').innerText = num_compairsons;
@@ -211,17 +224,19 @@ export default class App extends React.Component {
           var second_index = animations[k][1];
 
           //store height and color of bars that are being changed
+
+          temporary_color[0] = bar_docs[second_index - 1].style.backgroundColor;
+          temporary_color[1] = bar_docs[first_index].style.backgroundColor;
           temp = bar_docs[second_index].style.height;
-          temporary_color[0] = bar_docs[animations[k][1]].style.backgroundColor;
-          temporary_color[1] = bar_docs[animations[k][0]].style.backgroundColor;
 
+            for (var i = second_index; i > first_index; i--) {
+                //console.log(i,"from", i - 1, bar_docs[i].style.backgroundColor, "to", bar_docs[i - 1].style.backgroundColor);
+                bar_docs[i].style.height = bar_docs[i - 1].style.height;
+                bar_docs[i].style.backgroundColor = bar_docs[i - 1].style.backgroundColor;
+              }
+          bar_docs[first_index].style.height = temp;
+          bar_docs[first_index].style.backgroundColor = temporary_color[0];
 
-          for (var i = second_index; i > first_index ; i--) {
-              bar_docs[i].style.height = bar_docs[i - 1].style.height;
-              bar_docs[i].style.backgroundColor = bar_docs[i - 1].style.backgroundColor;
-            }
-
-            bar_docs[first_index].style.height = temp
 
           bar_docs[first_index].style.backgroundColor = highlight_color;
           bar_docs[second_index].style.backgroundColor = highlight_color;
@@ -229,19 +244,21 @@ export default class App extends React.Component {
           num_swaps += 1;
           document.getElementById('swaps').innerText = num_swaps;
 
-
+          //console.log(set_bar_list(bar_docs).slice(first_index,second_index));
         }
         // console.log(k, animations.length);
         if (k === animations.length - 1) {
           bar_docs[animations[k][0]].style.backgroundColor = temporary_color[0];
           bar_docs[animations[k][1]].style.backgroundColor = temporary_color[1];
-          // temp = bar_docs[animations[k][0]].style.height;
-          // bar_docs[animations[k][0]].style.height = bar_docs[animations[k][1]].style.height;
-          // bar_docs[animations[k][1]].style.height = temp;
 
-          //console.log(set_bar_list(bar_docs));
-          //console.log(updated_bars[0]);
           this.setState({bar_list: set_bar_list(bar_docs)});
+
+          test_init = [];
+          test_1 = set_bar_list(bar_docs);
+          for (var i = 0; i < test_1.length; i++) {
+            test_init.push(test_1[i]["color"])
+          }
+          //console.log(test_init);
 
 
         }
@@ -285,7 +302,7 @@ function colorpernum(min, max, number) {
 
 
   for (var i = 0; i < colors.length; i++) {
-    //colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
+    colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
   }
 
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
@@ -302,14 +319,6 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-
-function debug_height(bars,first_index,second_index){
-  var arr = [];
-  for (var i = first_index; i <= second_index; i++) {
-    arr.push(parseInt((bars[i].style.height).slice(0,-2)))
-  }
-  return arr;
-}
 
 function set_bar_list(div_bars){
     var state_bars = [];
