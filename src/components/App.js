@@ -1,6 +1,8 @@
 import React from "react";
 import Bars from "./Bars";
 
+
+import run_heapsort from "./HeapSort"
 import run_quicksort from "./QuickSort"
 import run_mergesort from "./MergeSort"
 import selectionsort from "./SelectionSort"
@@ -12,7 +14,7 @@ const max_bar = 500;
 //const color1 = '#007bff'; (0, 123, 255)
 const speed_max = 100;
 const highlight_color = "red";
-const gradient = false;
+const gradient = true;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -99,7 +101,7 @@ export default class App extends React.Component {
             <button className="navbar_btn" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(run_mergesort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Merge Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(run_quicksort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Quick Sort</button>
-            <button className="navbar_btn">Heap Sort</button>
+            <button className="navbar_btn" onClick={() => this.updatebars(run_heapsort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Heap Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(bubblesort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Bubble Sort</button>
           </div>
         </div>
@@ -154,6 +156,7 @@ export default class App extends React.Component {
   }
 
   updatebars = (animations) => {
+    //console.log(animations);
 
     this.clearCounters();
 
@@ -188,6 +191,9 @@ export default class App extends React.Component {
       this.timeouts.push(setTimeout(() => {
         var first_index = animations[k][0];
         var second_index = animations[k][1];
+        //console.log("Bar Docs:", bar_docs);
+        //console.log(first_index);
+
 
         //If the while loop has begun then change the color of the last two bars back into what they were
         if (k > 0) {

@@ -14,8 +14,6 @@ function run_quicksort(bar_list){
 
     quicksort(arr, 0, arr.length - 1, animations);
 
-    console.log(animations);
-
     return animations;
 
 
