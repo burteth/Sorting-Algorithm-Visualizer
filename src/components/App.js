@@ -11,7 +11,7 @@ import bubblesort from "./BubbleSort"
 var num_bars = 200;
 const min_bar = 10;
 const max_bar = 500;
-//const color1 = '#007bff'; (0, 123, 255)
+const color1 = '#005af6'; //(0, 123, 255)
 const speed_max = 100;
 const highlight_color = "red";
 const gradient = true;
@@ -21,7 +21,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      bar_list: GenerateBars(num_bars, min_bar, max_bar)
+      bar_list: GenerateBars(num_bars, min_bar, max_bar, 0)
     };
 
   }
@@ -33,6 +33,7 @@ export default class App extends React.Component {
     this.updateBarsFromState = this.updateBarsFromState.bind(this);
     this.clearCounters = this.clearCounters.bind(this);
     this.timeouts = [];
+    this.currentanimations = [];
 
   }
 
@@ -45,7 +46,7 @@ export default class App extends React.Component {
   randomizebars = () => {
     this.stopCurrentSort();
     this.setState({
-      bar_list: GenerateBars(num_bars, min_bar, max_bar)
+      bar_list: GenerateBars(document.getElementById("numberange").value, min_bar, max_bar, 0)
     });
     this.clearCounters();
 
@@ -87,6 +88,78 @@ export default class App extends React.Component {
     this.updateBarsFromState();
   }
 
+  //Change bars when gradient button is pressed
+  makeGradient = () => {
+
+    var grad = document.getElementById("gradient_button");
+
+    var bar_docs = document.getElementsByClassName("bar");
+    var bars = set_bar_list(bar_docs);
+
+    //Make one color
+    if (grad.className.includes("active")){
+
+        grad.classList.remove("active");
+        for (var i = 0; i < bars.length; i++) {
+          bars[i]["color"] = color1;
+        }
+
+    //make gradient
+    }else{
+
+        grad.classList.add("active");
+        for (var i = 0; i < bars.length; i++) {
+          bars[i]["color"] = colorpernum(min_bar,max_bar,bars[i]["len"]);
+        }
+    }
+
+    this.setState({bar_list: bars});
+
+  }
+
+  //Update the number of bars from the slider
+  update_num_bars = () => {
+    this.stopCurrentSort();
+    var number_of_bars = document.getElementById("numberange").value;
+
+    var bar_docs = document.getElementsByClassName("bar");
+    var bars = set_bar_list(bar_docs);
+
+    var difference = number_of_bars - bars.length;
+
+    if (difference > 0){
+      bars = bars.concat(GenerateBars(difference,min_bar,max_bar, bars.length));
+      this.setState({bar_list: bars});
+
+    }else{
+      bars = bars.splice(0, bars.length + difference);
+      this.setState({bar_list: bars});
+
+    }
+
+
+  }
+
+  //Update the speed of the current sort TOO SLOW FOR PRODUCTION
+  /*
+  update_sort_speed = () => {
+    if (this.currentanimations !== []){
+
+      this.stopCurrentSort();
+      var animations =  this.currentanimations[0];
+      var current_num = this.currentanimations[1];
+      animations.splice(0, this.currentanimations[1]);
+      //console.log(animations);
+      //console.log(current_num);
+      this.updatebars(animations);
+
+    }
+
+
+
+  }
+  */
+
   render() {
     const {bar_list} = this.state;
 
@@ -97,7 +170,6 @@ export default class App extends React.Component {
             <h1>Sorting Algorithm Visualizer</h1>
           </div>
           <div id="button_container">
-            <button className="navbar_btn" onClick={() => this.randomizebars()}>Randomize</button>
             <button className="navbar_btn" onClick={() => this.updatebars(selectionsort(JSON.parse(JSON.stringify(this.state.bar_list))))}>Selection Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(run_mergesort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Merge Sort</button>
             <button className="navbar_btn" onClick={() => this.updatebars(run_quicksort((JSON.parse(JSON.stringify(this.state.bar_list)))))}>Quick Sort</button>
@@ -111,36 +183,41 @@ export default class App extends React.Component {
             <div id="data_viz">
 
               <div id="counter_container">
-              <div>
-                <div className="data_header">Number of compairsons
-                  <div className="data_caption" id="compairsons">0</div>
+                <div>
+                  <div className="data_header">Number of compairsons
+                    <div className="data_caption" id="compairsons">0</div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="data_header">Number of swaps
-                  <div className="data_caption" id="swaps">0</div>
+                <div>
+                  <div className="data_header">Number of swaps
+                    <div className="data_caption" id="swaps">0</div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="data_header">Total number of operations
-                  <div className="data_caption" id="total_ops">0</div>
+                <div>
+                  <div className="data_header">Total number of operations
+                    <div className="data_caption" id="total_ops">0</div>
+                  </div>
                 </div>
-              </div>
               </div>
 
               <div id="range_container">
 
                 <div className="data_header">Number of bars</div>
-                <input type="range" className="slider" id="numberange" min="1" max="100" defaultValue="70"></input>
+                <input type="range" className="slider" id="numberange" min="20" max="1000" defaultValue={num_bars} onChange={this.update_num_bars}></input>
 
                 <div className="data_header">Sorting Speed</div>
                 <input type="range" className="slider" id="speedrange" min="50" max="100" defaultValue='75'></input>
 
               </div>
+              <div className="control_button_container">
+
+                <button className="control_button" onClick={() => this.randomizebars()}>Randomize Array</button>
+
+              </div>
 
               <div className="control_button_container">
 
-                <button className="control_button">Start</button>
+                <button className="control_button active" id="gradient_button" onClick={() => this.makeGradient()}>Gradient</button>
                 <button className="control_button" onClick={() => this.stopCurrentSort()}>Stop</button>
 
               </div>
@@ -159,8 +236,10 @@ export default class App extends React.Component {
     //console.log(animations);
 
     this.clearCounters();
+    this.stopCurrentSort();
 
     this.timeouts = [];
+    //this.currentanimations = [(JSON.parse(JSON.stringify(animations))),0];
 
     var bar_docs = document.getElementsByClassName("bar");
     var counter = 0;
@@ -175,13 +254,6 @@ export default class App extends React.Component {
     //linear
     var speed = Math.abs((((-1 * (document.getElementById("speedrange").value)) * speed_max / 100.0) + speed_max));
 
-    //testing
-    var test_init = [];
-    var test_1 = set_bar_list(bar_docs);
-    for (var i = 0; i < test_1.length; i++) {
-      test_init.push(test_1[i]["color"])
-    }
-    //console.log(test_init);
 
 
     while (counter < animations.length) {
@@ -265,7 +337,10 @@ export default class App extends React.Component {
 
         document.getElementById('total_ops').innerText = num_swaps + num_compairsons;
 
+        //this.currentanimations[1] += 1;
+
         k++;
+
 
       }, counter * speed));
       counter++;
@@ -277,12 +352,12 @@ export default class App extends React.Component {
 
 //Helper Functions
 
-function GenerateBars(len, min, max) {
+function GenerateBars(len, min, max, start) {
   var lst = [];
   for (var i = 0; i < len; i++) {
     var random = getRandomInt(min, max);
     lst.push({
-      id: i,
+      id: i + start,
       len: random,
       color: colorpernum(min, max, random)
     });
@@ -300,11 +375,9 @@ function colorpernum(min, max, number) {
 
   var colors = [0, 91, 246] /* Main Color */
 
-if (gradient) {
-  for (var i = 0; i < colors.length; i++) {
+    for (var i = 0; i < colors.length; i++) {
         colors[i] = Math.floor(colors[i] * (number - min) / (max - min));
-  }
-}
+    }
   var color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
 
 

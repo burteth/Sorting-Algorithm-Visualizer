@@ -203,7 +203,7 @@ button:focus{outline: 0;}
 .control_button_container{
 
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
 
 }
@@ -213,9 +213,14 @@ button:focus{outline: 0;}
 
   border-radius: 5em;
   font-size: 1.25em;
-  padding: 1em 0em 1em 0em;
+  //padding: 1em 0em 1em 0em;
   flex-grow: 1;
-  margin: 1.9em;
+  //margin: 1.9em;
+
+}
+.control_button.active{
+  background-color: var(--fiv-bars);
+  color: white;
 
 }
 .control_button:hover{
