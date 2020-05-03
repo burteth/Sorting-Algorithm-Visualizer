@@ -14,7 +14,6 @@ const max_bar = 500;
 const color1 = '#005af6'; //(0, 123, 255)
 const speed_max = 100;
 const highlight_color = "red";
-const gradient = true;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -78,7 +77,7 @@ export default class App extends React.Component {
 
     //Remove the bars that are currently red
     var bar_docs = document.getElementsByClassName("bar");
-    for (var i = 0; i < bar_docs.length; i++) {
+    for (i = 0; i < bar_docs.length; i++) {
       if (bar_docs[i].style.backgroundColor === highlight_color) {
         bar_docs[i].style.backgroundColor = colorpernum(min_bar, max_bar, parseInt(bar_docs[i].style.height));
       }
@@ -100,8 +99,8 @@ export default class App extends React.Component {
     if (grad.className.includes("active")){
 
         grad.classList.remove("active");
-        for (var i = 0; i < bars.length; i++) {
-          bars[i]["color"] = color1;
+        for (var j = 0; j < bars.length; j++) {
+          bars[j]["color"] = color1;
         }
 
     //make gradient
@@ -128,7 +127,7 @@ export default class App extends React.Component {
     var difference = number_of_bars - bars.length;
 
     if (difference > 0){
-      bars = bars.concat(GenerateBars(difference,min_bar,max_bar, bars.length));
+      bars = bars.concat(GenerateBars(difference, min_bar, max_bar, bars.length));
       this.setState({bar_list: bars});
 
     }else{
@@ -351,15 +350,28 @@ export default class App extends React.Component {
 //Helper Functions
 
 function GenerateBars(len, min, max, start) {
+  var grad = document.getElementById("gradient_button");
   var lst = [];
-  for (var i = 0; i < len; i++) {
-    var random = getRandomInt(min, max);
-    lst.push({
-      id: i + start,
-      len: random,
-      color: colorpernum(min, max, random)
-    });
-    colorpernum(min, max, random);
+
+
+  if (grad !== null && !grad.className.includes("active")){
+        for (var j = 0; j < len; j++) {
+          lst.push({
+            id: j + start,
+            len: getRandomInt(min, max),
+            color: color1
+          });
+        }
+
+  }else{
+    for (var i = 0; i < len; i++) {
+      var random = getRandomInt(min, max);
+      lst.push({
+        id: i + start,
+        len: random,
+        color: colorpernum(min, max, random)
+      });
+    }
   }
 
   return lst;
@@ -381,15 +393,6 @@ function colorpernum(min, max, number) {
 
   return color;
 }
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
 
 function set_bar_list(div_bars){
     var state_bars = [];

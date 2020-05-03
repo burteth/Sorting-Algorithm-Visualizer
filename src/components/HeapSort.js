@@ -12,11 +12,11 @@ function run_heapsort(bar_list){
     create_heap(values, animations);
 
     //sort the heap
-    for (var i = values.length - 1; i > 0; i--) {
+    for (var j = values.length - 1; j > 0; j--) {
 
-      animations.push([i,0,"swap"])
-      swap(values,i,0);
-      heapify(values,i,0, animations);
+      animations.push([j,0,"swap"])
+      swap(values,j,0);
+      heapify(values,j,0, animations);
     }
 
       return animations;
@@ -66,28 +66,9 @@ function create_heap(heap, animations){
 
 }
 
-
-
-function get_parent_index(heap,index){
-    return(Math.ceil((index - 1) / 2));
-}
 function swap(input, index_A, index_B) {
    var temp = input[index_A];
 
    input[index_A] = input[index_B];
    input[index_B] = temp;
 }
-
-
-
-
-function test(){
-
-  var test1 = [10,90,8,71,6,57,400,16,21,1]
-  //console.log(test1);
-  run_heapsort(test1);
-  //console.log(test1);
-
-
-}
-test()
