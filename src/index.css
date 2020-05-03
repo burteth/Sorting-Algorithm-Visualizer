@@ -203,8 +203,9 @@ button:focus{outline: 0;}
 .control_button_container{
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-around;
+
 
 }
 .control_button{
@@ -213,8 +214,12 @@ button:focus{outline: 0;}
 
   border-radius: 5em;
   font-size: 1.25em;
-  //padding: 1em 0em 1em 0em;
-  flex-grow: 1;
+  //padding: 0.5em 1em 0.5em 1em;
+  padding-left: 7%;
+  padding-right: 7%;
+  padding-top: 4%;
+  padding-bottom: 4%;
+  //flex-grow: 1;
   //margin: 1.9em;
 
 }

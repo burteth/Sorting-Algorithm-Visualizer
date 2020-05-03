@@ -210,14 +210,12 @@ export default class App extends React.Component {
 
               </div>
               <div className="control_button_container">
-
-                <button className="control_button" onClick={() => this.randomizebars()}>Randomize Array</button>
-
+                <button className="control_button active" id="gradient_button" onClick={() => this.makeGradient()}>Gradient</button>
               </div>
 
               <div className="control_button_container">
 
-                <button className="control_button active" id="gradient_button" onClick={() => this.makeGradient()}>Gradient</button>
+                <button className="control_button" onClick={() => this.randomizebars()}>Randomize</button>
                 <button className="control_button" onClick={() => this.stopCurrentSort()}>Stop</button>
 
               </div>
