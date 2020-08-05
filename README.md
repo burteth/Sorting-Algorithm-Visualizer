@@ -34,5 +34,5 @@ Sorting Algorithim Visualizer built from scratch using react.js. Sorting algorit
 
 ```
 npm install
-npm run serve
+npm run
 ```
